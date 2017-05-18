@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soshow.ssi.cssp.activity.dao.ActivityDao">
+	<!-- search resultMap -->
+	<resultMap id="activityResult" type="com.soshow.ssi.cssp.activity.dto.ActivityDTO">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="startTime" column="start_time" />
+		<result property="endTime" column="end_time" />
+		<result property="remark" column="remark" />
+		<result property="reason" column="reason" />
+		<result property="approver" column="approver" />
+		<result property="studentId" column="student_id" />
+		<result property="address" column="address" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<sql id="queryCondition">
+		id,name,start_time,end_time,remark,reason,approver,student_id,address,status
+	</sql>
+	
+	<!--插入语句-->
+	<insert id="add" parameterType="com.soshow.ssi.cssp.activity.dto.ActivityDTO">
+		INSERT INTO activity(
+			name,start_time,end_time,remark,reason,approver,student_id,address,status
+		)
+		VALUES(
+			#{name},#{startTime},#{endTime},#{remark},#{reason},#{approver},#{studentId},#{address},#{status}
+		)
+	</insert>
+
+	<!--删除语句 -->
+    <delete id="delete">  
+        DELETE FROM activity WHERE id = #{id}  
+    </delete>
+    
+    <!--修改语句 -->
+    <update id="updateByCondition" parameterType="com.soshow.ssi.cssp.activity.dto.ActivityCondition">  
+        UPDATE activity 
+        <set>
+            <if test="activity.name!=null">
+                name = #{activity.name},
+            </if>
+            <if test="activity.startTime!=null">
+                start_time = #{activity.startTime},
+            </if>
+            <if test="activity.endTime!=null">
+                end_time = #{activity.endTime},
+            </if>
+            <if test="activity.remark!=null">
+                remark = #{activity.remark},
+            </if>
+            <if test="activity.reason!=null">
+                reason = #{activity.reason},
+            </if>
+            <if test="activity.studentId!=null">
+                student_id = #{activity.studentId},
+            </if>
+            <if test="activity.address!=null">
+                address = #{activity.address},
+            </if>
+            <if test="activity.status!=null">
+                status = #{activity.status},
+            </if>
+        </set> 
+		<trim prefix="where" prefixOverrides="and|or">
+		    <if test="id!=null">
+                and id = #{id}
+            </if>
+		    <if test="status!=null">
+                and status = #{status}
+            </if>
+		</trim>
+    </update>
+    
+    <!--通过id查找 -->
+	<select id="findById" resultMap="activityResult">
+		SELECT <include refid="queryCondition"/> FROM activity WHERE id = #{id}
+	</select>
+	
+	<sql id="querySQL">
+		SELECT
+			<include refid="queryCondition"/> 
+		FROM activity
+		<trim prefix="where" prefixOverrides="and/or">
+		    <if test="id!=null">
+                and id = #{id}
+            </if>
+		    <if test="status!=null">
+                and status = #{status}
+            </if>
+            <if test="name!=null">
+                and name = #{name}
+            </if>
+		</trim>
+	</sql>
+	
+	<!--分页查询-->
+	<select id="findPageByCondition" resultMap="activityResult" parameterType="com.soshow.ssi.cssp.activity.dto.ActivityCondition">
+		<include refid="querySQL"/>
+		LIMIT 
+			#{startRow},#{endRow} 
+	</select>
+	
+	<select id="countByCondition" parameterType="com.soshow.ssi.cssp.activity.dto.ActivityCondition" resultType="java.lang.Long">
+		SELECT 
+			count(*) 
+		FROM 
+			(<include refid="querySQL"/>) as da
+	</select>
+	
+</mapper>

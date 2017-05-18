@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd"
+	default-lazy-init="false">
+
+
+	<!-- 最重要:::如果放在spring-context.xml中，这里的aop设置将不会生效 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<context:component-scan base-package="com.soshow.ssi">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 激活@Controller模式 -->
+	<mvc:annotation-driven
+		content-negotiation-manager="contentNegotiationManager"
+		enable-matrix-variables="true">
+		<mvc:message-converters register-defaults="true">
+			<bean
+				class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+			<!-- StringHttpMessageConverter编码为UTF-8，防止乱码 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+				<property name="supportedMediaTypes">
+					<list>
+						<bean class="org.springframework.http.MediaType">
+							<constructor-arg index="0" value="text" />
+							<constructor-arg index="1" value="plain" />
+							<constructor-arg index="2" value="UTF-8" />
+						</bean>
+						<bean class="org.springframework.http.MediaType">
+							<constructor-arg index="0" value="*" />
+							<constructor-arg index="1" value="*" />
+							<constructor-arg index="2" value="UTF-8" />
+						</bean>
+					</list>
+				</property>
+			</bean>
+
+			<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/plain;charset=UTF-8</value>
+					</list>
+				</property>
+				<property name="prettyPrint" value="true" />
+			</bean>
+
+			<bean
+				class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+			<bean
+				class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<mvc:default-servlet-handler />
+
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<!-- 扩展名至mimeType的映射,即 /user.json => application/json -->
+		<property name="favorPathExtension" value="true" />
+		<!-- 用于开启 /userinfo/123?format=json 的支持 -->
+		<property name="favorParameter" value="true" />
+		<property name="parameterName" value="format" />
+		<!-- 是否忽略Accept Header -->
+		<property name="ignoreAcceptHeader" value="false" />
+
+		<!--扩展名到MIME的映射；favorPathExtension, favorParameter是true时起作用 -->
+		<property name="mediaTypes">
+			<value>
+				json=application/json
+				xml=application/xml
+				html=text/html
+			</value>
+		</property>
+		<!-- 默认的content type -->
+		<property name="defaultContentType" value="application/json" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"
+		p:order="0">
+		<!-- 内容协商管理器 用于决定media type -->
+		<property name="contentNegotiationManager" ref="contentNegotiationManager" />
+		<!-- 默认视图 放在解析链最后 -->
+		<property name="defaultViews">
+			<list>
+				<bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView" />
+				<!--<bean class="org.springframework.web.servlet.view.xml.MarshallingView"/> -->
+			</list>
+		</property>
+	</bean>
+
+	<!-- <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.soshow.ssi.common.web.UserSigninInterceptor">
+				<property name="ignoreUrls">
+					<list>
+						<value>/**</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+
+	<!-- 定义excel视图 -->
+	<bean class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="location"
+			value="classpath:META-INF/spring/applicationContext-web-mvc-views.xml"></property>
+	</bean>
+
+	<import resource="applicationContext-web-swagger-${env:prd}.xml" />
+
+	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 InternalResourceViewResolver默认的就是JstlView所以这里就不用配置viewClass了 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<!-- 上传必须配置 不然转换会报错 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<property name="maxUploadSize">
+			<value>32505856</value><!-- 上传文件大小限制为31M，31*1024*1024 -->
+		</property>
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:org/hibernate/validator/ValidationMessages</value>
+			</list>
+		</property>
+		<property name="fileEncodings" value="utf-8" />
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+	</bean>
+
+	<bean class="com.soshow.ssi.common.web.DefaultExceptionHandler" />
+
+	<!-- 后台生成验证码 -->
+	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+		<property name="config">
+			<bean class="com.google.code.kaptcha.util.Config">
+				<constructor-arg>
+					<props>
+						<prop key="kaptcha.border">no</prop>
+						<!-- <prop key="kaptcha.border.color">105,179,90</prop> -->
+						<prop key="kaptcha.textproducer.font.color">255,255,255</prop>
+						<prop key="kaptcha.image.width">300</prop>
+						<prop key="kaptcha.image.height">99</prop>
+						<prop key="kaptcha.textproducer.font.size">86</prop>
+						<prop key="kaptcha.session.key">google.kaptcha.code</prop>
+						<prop key="kaptcha.textproducer.char.length">4</prop>
+						<!-- <prop key="kaptcha.textproducer.char.space">2</prop> -->
+						<prop key="kaptcha.textproducer.font.names">Arial</prop>
+						<prop key="kaptcha.textproducer.char.string">0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ</prop>
+						<prop key="kaptcha.obscurificator.impl">com.google.code.kaptcha.impl.WaterRipple</prop>
+						<prop key="kaptcha.noise.color">white</prop>
+						<!-- <prop key="kaptcha.noise.impl">com.google.code.kaptcha.impl.NoNoise</prop> -->
+						<prop key="kaptcha.background.clear.from">32,132,211</prop>
+						<prop key="kaptcha.background.clear.to">32,132,211</prop>
+					</props>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+</beans>

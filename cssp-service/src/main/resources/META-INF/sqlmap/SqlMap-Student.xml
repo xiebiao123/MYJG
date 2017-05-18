@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soshow.ssi.cssp.student.dao.StudentDao">
+
+	<!-- search resultMap -->
+	<resultMap id="studentResult" type="com.soshow.ssi.cssp.student.dto.StudentDTO">
+		<result property="id" column="id" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<result property="email" column="email" />
+		<result property="tel" column="tel" />
+		<result property="sex" column="sex" />
+		<result property="address" column="address" />
+		<result property="picture" column="picture" />
+		<result property="remark" column="remark" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<sql id="queryCondition">
+		id,password,name,age,email,tel,sex,address,picture,remark,status
+	</sql>
+	
+	<!--插入语句-->
+	<insert id="add" parameterType="com.soshow.ssi.cssp.student.dto.StudentDTO">
+		INSERT INTO student(
+			password,name,age,email,tel,sex,address,picture,remark,status
+		)
+		values(
+			#{password},#{name},#{age},#{email},#{tel},#{sex},#{address},#{picture},#{remark},#{status}
+		)
+	</insert>
+
+	<!--删除语句 -->
+    <delete id="delete" parameterType="java.lang.Integer">  
+        DELETE FROM student WHERE id = #{id}  
+    </delete>
+    
+    <!--修改语句 -->
+    <update id="updateByCondition" parameterType="com.soshow.ssi.cssp.student.dto.StudentCondition">  
+        UPDATE student 
+        <set>
+            <if test="student.password!=null">
+                password = #password#
+            </if>
+            <if test="student.name!=null">
+                name = #name#
+            </if>
+            <if test="student.age!=null">
+                age = #age#
+            </if>
+            <if test="student.tel!=null">
+                tel = #tel#
+            </if>
+            <if test="student.sex!=null">
+                sex = #sex#
+            </if>
+            <if test="student.address!=null">
+                address = #address#
+            </if>
+            <if test="student.picture!=null">
+                picture = #picture#
+            </if>
+            <if test="student.remark!=null">
+                remark = #remark#
+            </if>
+            <if test="student.status!=null">
+                status = #status#
+            </if>
+        </set>
+		<trim prefix="where" prefixOverrides="and|or">
+		    <if test="id!=null">
+                and id = #{id}
+            </if>
+		    <if test="status!=null">
+                and status = #{status}
+            </if>
+		</trim>	
+    </update>
+    
+    <!--通过id查找 -->
+	<select id="findById" resultMap="studentResult">
+		SELECT <include refid="queryCondition"/> FROM student WHERE id = #{id}
+	</select>
+	
+	<sql id="querySQL">
+		SELECT 
+			<include refid="queryCondition"/> 
+		FROM  
+			student 
+	    <trim prefix="where" prefixOverrides="and|or">
+		    <if test="id!=null">
+                and id = #{id}
+            </if>
+            <if test="sex!=null">
+                and sex = #{sex}
+            </if>
+		    <if test="status!=null">
+                and status = #{status}
+            </if>
+		</trim>
+	</sql>
+	
+	<!--分页查询-->
+	<select id="findPageByCondition" resultMap="studentResult" parameterType="com.soshow.ssi.cssp.student.dto.StudentCondition">
+		<include refid="querySQL"/>
+		limit 
+			#{startRow},#{endRow} 
+	</select>
+	
+	<select id="countByCondition" parameterType="com.soshow.ssi.cssp.student.dto.StudentCondition" resultType="java.lang.Long">
+		select 
+			count(*) 
+		from 
+			(<include refid="querySQL"/>) as da
+	</select>
+	
+</mapper>

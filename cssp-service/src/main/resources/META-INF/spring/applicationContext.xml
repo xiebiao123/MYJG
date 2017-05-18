@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+	http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.2.xsd
+	">  
+  
+	<import resource="applicationContext-resource.xml"/>
+	<!-- 引入mongodb的相关配置 -->
+    <import resource="applicationContext-mongodb.xml"/>
+	<!-- 引入redis属性配置文件 -->
+    <import resource="applicationContext-redis.xml"/>
+    
+    <!-- 缺省的异步任务线程池 -->
+	<task:executor id="asyncExecutor" pool-size="${default.async.pool.coreSize:5}-${default.async.pool.maxSize:100}" queue-capacity="${default.async.pool.queueCapacity:10}" keep-alive="${default.async.pool.keepAlive:10}" /> 
+	
+	<bean id="mongoLogTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${mongoLog.async.pool.coreSize:5}"/>
+		<property name="maxPoolSize" value="${mongoLog.async.pool.maxSize:100}"/>
+		<property name="queueCapacity" value="${mongoLog.async.pool.queueCapacity:10}"/>
+		<property name="keepAliveSeconds" value="${mongoLog.async.pool.keepAlive:10}"/>
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略  现配置为不处理-->
+	    <property name="rejectedExecutionHandler">
+	        <bean class="java.util.concurrent.ThreadPoolExecutor$DiscardPolicy" />
+	    </property>
+	</bean>
+</beans>

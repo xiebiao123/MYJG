@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans    xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.2.xsd
+         ">
+   	<bean class="com.soshow.ssi.common.util.SpringContextUtil"/>
+   	
+   	<bean id="redisTemplate" class="com.soshow.ssi.common.cache.RedisTemplate" >
+		<property name="jedisPool" ref="jedisPool"/>
+	</bean>
+   	
+   	<bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="destroy">
+		<constructor-arg name="poolConfig" ref="poolConfig" />
+		<constructor-arg name="host" value="${redis.server.ip}" />
+		<constructor-arg name="port" value="${redis.server.port}" />
+		<constructor-arg name="timeout" value="${redis.defaultTimeOut}" />
+		<constructor-arg name="password" value="${redis.server.password}" />
+	</bean>
+    
+   	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" >
+        <property name="maxIdle"> 
+                <value>${redis.maxIdle}</value> 
+        </property> 
+        <property name="maxTotal"> 
+                <value>${redis.maxTotal}</value> 
+        </property> 
+        <property name="maxWaitMillis"> 
+                <value>${redis.maxWaitMillis}</value> 
+        </property> 
+        <property name="minIdle"> 
+                <value>${redis.minIdle}</value> 
+        </property> 
+        <property name="testOnBorrow"> 
+                <value>${redis.testOnBorrow}</value> 
+        </property> 
+        <property name="testOnReturn"> 
+                <value>${redis.testOnReturn}</value> 
+        </property> 
+        <property name="testWhileIdle"> 
+                <value>${redis.testWhileIdle}</value> 
+        </property> 
+        <property name="timeBetweenEvictionRunsMillis"> 
+                <value>${redis.timeBetweenEvictionRunsMillis}</value> 
+        </property> 
+	</bean>
+</beans> 

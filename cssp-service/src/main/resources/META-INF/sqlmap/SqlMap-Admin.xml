@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soshow.ssi.cssp.admin.dao.AdminDao">
+
+	<!-- search resultMap -->
+	<resultMap id="adminResult" type="com.soshow.ssi.cssp.admin.dto.AdminDTO">
+		<result property="id" column="id" />
+		<result property="adminPassword" column="admin_password" />
+		<result property="adminName" column="admin_name" />
+		<result property="email" column="email" />
+		<result property="tel" column="tel" />
+		<result property="picture" column="picture" />
+	</resultMap>
+
+	<sql id="queryCondition">
+		id,admin_password,admin_name,email,tel,picture
+	</sql>
+	
+	<!--插入语句-->
+	<insert id="add" parameterType="com.soshow.ssi.cssp.admin.dto.AdminDTO" >
+		INSERT INTO admin(
+			admin_password,admin_name,email,tel,picture
+		)
+		values(
+			#{adminPassword},#{adminName},#{email},#{tel},#{picture}
+		)
+	</insert>
+
+	<!--删除语句 -->
+    <delete id="delete">  
+        DELETE FROM admin WHERE id = #{id}  
+    </delete>
+    
+    <!--修改语句 -->
+    <update id="updateByCondition" parameterType="com.soshow.ssi.cssp.admin.dto.AdminCondition">  
+        UPDATE admin 
+        <set>
+            <if test="admin.adminPassword!=null">
+                admin_password = #{adminPassword},
+            </if>
+            <if test="admin.adminName!=null">
+                admin_name = #{adminName},
+            </if>
+            <if test="admin.email!=null">
+                email = #{email},
+            </if>
+            <if test="admin.tel!=null">
+                tel = #{tel},
+            </if>
+            <if test="admin.picture!=null">
+                picture = #{picture},
+            </if>
+        </set>
+        <trim prefix="where" prefixOverrides="and|or">
+		    <if test="id!=null">
+                and id = #{id}
+            </if>
+		    <if test="email!=null">
+                and email = #{email}
+            </if>
+		</trim>
+    </update>
+    
+    <!--通过id查找 -->
+	<select id="findById" resultMap="adminResult">
+		SELECT <include refid="queryCondition"/> FROM admin WHERE id = #{id}
+	</select>
+	
+	
+	<sql id="querySQL">
+		SELECT 
+			<include refid="queryCondition"/> 
+		FROM  
+			admin
+		<trim prefix="where" prefixOverrides="and|or">
+		    <if test="id!=null">
+                and id = #{id}
+            </if>
+		    <if test="email!=null">
+                and email = #{email}
+            </if>
+            <if test="tel!=null">
+                and tel = #{tel}
+            </if>
+		</trim> 
+	</sql>
+	
+	<!--分页查询-->
+	<select id="findPageByCondition" resultMap="adminResult" parameterType="com.soshow.ssi.cssp.admin.dto.AdminCondition">
+		<include refid="querySQL"/>
+		LIMIT 
+			#{startRow},#{endRow} 
+	</select>
+	
+	<select id="countByCondition" parameterType="com.soshow.ssi.cssp.admin.dto.AdminCondition" resultType="java.lang.Long">
+		SELECT 
+			count(*) 
+		FROM 
+			(<include refid="querySQL"/>) as da
+	</select>
+	
+</mapper>
