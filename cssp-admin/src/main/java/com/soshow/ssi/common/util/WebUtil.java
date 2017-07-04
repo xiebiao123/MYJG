@@ -78,7 +78,6 @@ public class WebUtil {
 		boolean isMulti = ServletFileUpload.isMultipartContent(request);
 		if (isMulti) {
 			try {
-				@SuppressWarnings("unchecked")
 				List<FileItem> fileItems = fileUpload.parseRequest(request);
 				for (FileItem fileItem : fileItems) {
 					String itemName = fileItem.getFieldName();

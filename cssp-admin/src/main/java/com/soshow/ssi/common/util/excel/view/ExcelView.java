@@ -24,6 +24,7 @@ import com.soshow.ssi.common.annotation.Excel;
 import com.soshow.ssi.common.util.excel.ExcelDataFormatter;
 import com.soshow.ssi.common.util.excel.ReflectUtils;
 ;
+@SuppressWarnings("deprecation")
 public class ExcelView extends AbstractExcelView {
 
 	public static final String EXCEL_MODEL_VIEW ="excelView"; 

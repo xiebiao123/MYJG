@@ -44,6 +44,7 @@
 		<org.mybatis.mybatis-spring>1.2.2</org.mybatis.mybatis-spring>
 		<mongo.java.driver.version>3.3.0</mongo.java.driver.version>
 		<spring.data.mongodb.version>1.9.2.RELEASE</spring.data.mongodb.version>
+		<latest.release.version>2.1.4</latest.release.version>
 	</properties>
 
 	<dependencies>
@@ -386,6 +387,20 @@
 			<version>3.10-FINAL</version>
 		</dependency>
 		<!-- 导入excel end -->
+		
+		<!-- 引入elastic-job-lite核心模块 -->
+		<dependency>
+		    <groupId>com.dangdang</groupId>
+		    <artifactId>elastic-job-lite-core</artifactId>
+		    <version>${latest.release.version}</version>
+		</dependency>
+		
+		<!-- 使用springframework自定义命名空间时引入 -->
+		<dependency>
+		    <groupId>com.dangdang</groupId>
+		    <artifactId>elastic-job-lite-spring</artifactId>
+		    <version>${latest.release.version}</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>javax.servlet</groupId>

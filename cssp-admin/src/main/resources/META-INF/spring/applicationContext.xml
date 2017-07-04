@@ -22,6 +22,8 @@
     <import resource="applicationContext-mongodb.xml"/>
 	<!-- 引入redis属性配置文件 -->
     <import resource="applicationContext-redis.xml"/>
+    <!-- 引入elastic-job-lite属性配置文件 -->
+    <import resource="applicationContext-elastic-job.xml"/>
     
     <!-- 缺省的异步任务线程池 -->
 	<task:executor id="asyncExecutor" pool-size="${default.async.pool.coreSize:5}-${default.async.pool.maxSize:100}" queue-capacity="${default.async.pool.queueCapacity:10}" keep-alive="${default.async.pool.keepAlive:10}" /> 
