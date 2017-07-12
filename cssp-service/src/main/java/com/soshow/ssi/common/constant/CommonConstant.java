@@ -1,8 +1,6 @@
 package com.soshow.ssi.common.constant;
 /**
  * 公共常量类
- * @author zoujun
- *
  */
 public class CommonConstant {
 	/**

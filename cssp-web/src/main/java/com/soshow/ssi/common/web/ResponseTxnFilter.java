@@ -15,12 +15,8 @@ import com.soshow.ssi.common.bean.WebSessionUser;
 import com.soshow.ssi.common.constant.CommonConstant;
 import com.soshow.ssi.common.support.SessionIdGenerator;
 
-
 /**
- *
  * 重写TxnIdFilter，在返回之前，把txn写到http头，供nginx的access_log输出及手机端使用
- * @author wuzhw
- *
  */
 public class ResponseTxnFilter extends TxnIdFilter {
 	

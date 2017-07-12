@@ -13,10 +13,6 @@ import com.mangofactory.swagger.models.dto.ApiInfo;
 import com.mangofactory.swagger.plugin.EnableSwagger;
 import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 
-/**
- * @author yinjy
- *
- */
 @Configuration
 @EnableSwagger
 @EnableWebMvc

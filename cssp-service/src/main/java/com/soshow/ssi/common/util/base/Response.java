@@ -4,9 +4,6 @@ import com.soshow.ssi.common.enums.base.ErrorEnum;
 import com.soshow.ssi.common.enums.base.StatusEnum;
 
 /**
- * 
- * @author wuzhq
- *
  * @param <T>
  */
 public class Response<T> {

@@ -8,11 +8,8 @@ import java.io.ObjectOutputStream;
 import redis.clients.util.SafeEncoder;
 
 /**
- *
- * @author yiz
  * @date 2016年5月10日 下午4:43:32
  * @version 1.0.0 
- * @copyright pycredit.cn 
  */
 public class JdkSerializer implements ISerializer {
 	public static final ISerializer me = new JdkSerializer();

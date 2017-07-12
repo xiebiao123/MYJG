@@ -2,7 +2,6 @@ package com.soshow.ssi.common.enums.biz;
 /**
  * 系统模块枚举
  * code 格式为 sys_model_xxx,xxx为具体模块名称
- * @author wuzhq
  *
  */
 public enum SysModuleEnum {

@@ -18,8 +18,6 @@ import com.soshow.ssi.common.util.base.BizException;
 
 /**
  * 登录校验拦截器
- * @author wuzhq
- *
  */
 public class UserSigninInterceptor  extends HandlerInterceptorAdapter{
 	

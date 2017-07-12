@@ -10,8 +10,6 @@ import com.soshow.ssi.common.enums.biz.SysActionTypeEnum;
 import com.soshow.ssi.common.enums.biz.SysModuleEnum;
 /**
  * 系统操作日记注解
- * @author wuzhq
- *
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

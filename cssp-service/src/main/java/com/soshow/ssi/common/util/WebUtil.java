@@ -24,9 +24,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 /************************
  * 提取请求参数工具类
- * 
- * @author zhouzhsh
- * 
  */
 public class WebUtil {
 	private static Logger log = LoggerFactory.getLogger(WebUtil.class);

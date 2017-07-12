@@ -1,8 +1,5 @@
 package com.soshow.ssi.common.support;
 
-/**
- * Created by fangyt on 2016/12/15
- */
 public interface IdentifierGenerator {
 
     /**

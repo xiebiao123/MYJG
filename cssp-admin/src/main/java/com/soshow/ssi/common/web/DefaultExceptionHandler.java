@@ -23,8 +23,6 @@ import com.soshow.ssi.common.enums.base.StatusEnum;
 import com.soshow.ssi.common.util.base.BizException;
 import com.soshow.ssi.common.util.base.MyError;
 import com.soshow.ssi.common.util.base.MyResponse;
-
-
 /**
  * 系统通用异常处理
  * @author xieb

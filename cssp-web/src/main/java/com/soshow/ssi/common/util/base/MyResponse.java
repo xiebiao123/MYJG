@@ -8,10 +8,6 @@ import com.soshow.ssi.common.enums.CommStatusEnum;
 import com.soshow.ssi.common.enums.base.ErrorEnum;
 import com.soshow.ssi.common.enums.base.StatusEnum;
 
-/**
- * @author yinjy
- *
- */
 public class MyResponse<T> {
 
 	/**

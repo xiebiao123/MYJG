@@ -7,8 +7,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 /**
- * 
- * @author shenzh
  * @date 2016-10-01
  */
 public interface MongoTemplateDAO<T> {

@@ -16,8 +16,6 @@ import com.soshow.ssi.mongo.dto.SystemUserActionLogDTO;
 
 /**
  * 用户操作日记工具类
- * @author wuzhq
- *
  */
 public class SysActionLogUtil {
 	private static final Logger loggger = LoggerFactory.getLogger(SysActionLogUtil.class);

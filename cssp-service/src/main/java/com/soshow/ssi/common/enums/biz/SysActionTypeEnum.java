@@ -1,8 +1,6 @@
 package com.soshow.ssi.common.enums.biz;
 /**
  * 系统用户具体操作枚举
- * @author wuzhq
- *
  */
 public enum SysActionTypeEnum {
 	SIGIN("sys_act_sigin","用户登录"),

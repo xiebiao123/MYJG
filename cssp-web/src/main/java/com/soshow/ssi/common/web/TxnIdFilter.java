@@ -21,10 +21,8 @@ import org.slf4j.MDC;
 import com.soshow.ssi.common.constant.CommonConstant;
 import com.soshow.ssi.common.support.SessionIdGenerator;
 
-
 /**
  * 类TxnIdFilter.java的实现描述：TODO 类实现描述 
- * @author caizhan 2010-5-19 上午10:32:04
  */
 public class TxnIdFilter implements Filter {
 

@@ -32,8 +32,6 @@ import com.soshow.ssi.mongo.dto.SystemUserActionLogDTO;
 
 /**
  * 系统操作日记切面
- * @author wuzhq
- *
  */
 @Component
 @Aspect

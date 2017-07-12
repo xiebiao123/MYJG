@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
 /** 
 * 文件上传工具类 
-* @author xieb 
-* 
 */ 
 public class UploadUtil { 
    //获取项目的class根目录 
