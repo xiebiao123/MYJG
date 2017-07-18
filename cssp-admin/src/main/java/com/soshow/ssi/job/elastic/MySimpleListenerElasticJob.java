@@ -1,9 +1,9 @@
-package com.soshow.ssi.job;
+package com.soshow.ssi.job.elastic;
 
 import com.dangdang.ddframe.job.api.ShardingContext;
 import com.dangdang.ddframe.job.api.simple.SimpleJob;
 
-public class MyElasticJob implements SimpleJob {
+public class MySimpleListenerElasticJob implements SimpleJob {
     
     @Override
     public void execute(ShardingContext context) {

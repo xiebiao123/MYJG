@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
-    xmlns:job="http://www.dangdang.com/schema/ddframe/job"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+	xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.dangdang.com/schema/ddframe/reg
                         http://www.dangdang.com/schema/ddframe/reg/reg.xsd
                         http://www.dangdang.com/schema/ddframe/job
                         http://www.dangdang.com/schema/ddframe/job/job.xsd
                         ">
-    <!--配置作业注册中心 -->
-    <reg:zookeeper id="regCenter" server-lists="localhost:2181" namespace="dd-job" base-sleep-time-milliseconds="1000" max-sleep-time-milliseconds="3000" max-retries="3" />
-    
-    <!-- 配置作业-->
-    <job:simple id="oneOffElasticJob" class="com.soshow.ssi.job.MyElasticJob" registry-center-ref="regCenter" cron="0/10 * * * * ?" sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+	<!--配置作业注册中心 -->
+	<reg:zookeeper id="regCenter" server-lists="localhost:2181"
+		namespace="dd-job" base-sleep-time-milliseconds="1000"
+		max-sleep-time-milliseconds="3000" max-retries="3" />
+
+	<!-- 配置简单作业 -->
+	<job:simple id="simpleElasticJob" class="com.soshow.ssi.job.elastic.MySimpleElasticJob"
+		registry-center-ref="regCenter" cron="0/10 * * * * ?"
+		sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+
+	<!-- <bean id="yourRefJobBeanId" class="xxx.MySimpleRefElasticJob">
+		<property name="fooService" ref="xxx.FooService" />
+	</bean>
+	配置关联Bean作业
+	<job:simple id="simpleRefElasticJob" job-ref="yourRefJobBeanId"
+		registry-center-ref="regCenter" cron="0/10 * * * * ?"
+		sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" /> -->
+
+	<!-- 配置数据流作业 -->
+	<job:dataflow id="dataflowElasticJob" class="com.soshow.ssi.job.elastic.MyDataflowElasticJob"
+		registry-center-ref="regCenter" cron="0/20 * * * * ?"
+		sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+
+	<!-- 配置脚本作业
+	<job:script id="scriptElasticJob" registry-center-ref="regCenter"
+		cron="0/10 * * * * ?" sharding-total-count="3"
+		sharding-item-parameters="0=A,1=B,2=C" script-command-line="/your/file/path/demo.sh" /> -->
+
+	<!-- 配置带监听的数据流作业 -->
+	<job:dataflow id="listenerElasticJob" class="com.soshow.ssi.job.elastic.MyDataflowListenerElasticJob"
+		registry-center-ref="regCenter" cron="0/10 * * * * ?"
+		sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C">
+		<job:listener class="com.soshow.ssi.job.listener.MyElasticJobListener" />
+		<job:distributed-listener class="com.soshow.ssi.job.listener.OnceElasticJobListener"
+			started-timeout-milliseconds="1000" completed-timeout-milliseconds="2000" />
+	</job:dataflow>
+
+	<!-- 配置带作业数据库事件追踪的简单作业 -->
+	<job:simple id="eventTraceElasticJob" class="com.soshow.ssi.job.elastic.MySimpleListenerElasticJob"
+		registry-center-ref="regCenter" cron="0/10 * * * * ?"
+		sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C"
+		event-trace-rdb-data-source="dataSource">
+	</job:simple>
 </beans>

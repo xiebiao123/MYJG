@@ -298,7 +298,6 @@
 		<!-- mybatis end -->
 
 		<!-- jackson start -->
-		
 		<dependency>  
             <groupId>com.fasterxml.jackson.core</groupId>  
             <artifactId>jackson-core</artifactId>  
@@ -400,6 +399,12 @@
 		    <groupId>com.dangdang</groupId>
 		    <artifactId>elastic-job-lite-spring</artifactId>
 		    <version>${latest.release.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.dangdang</groupId>
+		    <artifactId>elastic-job-lite-console</artifactId>
+		    <version>2.1.5</version>
 		</dependency>
 		
 		<dependency>
